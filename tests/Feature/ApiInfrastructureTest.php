@@ -8,10 +8,12 @@ use App\Models\User;
 use App\Services\StoredFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
+use Mockery;
 use RuntimeException;
 use Tests\TestCase;
 
@@ -57,8 +59,12 @@ class ApiInfrastructureTest extends TestCase
         $this->assertSame(['Reciclagem', 'Energia', 'Agua'], $names);
 
         $this->getJson('/api/v1/categories?sort=status')
-            ->assertOk()
-            ->assertJsonCount(3, 'data');
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('sort');
+
+        $this->getJson('/api/v1/categories?filter[inexistente]=valor')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('filter.inexistente');
     }
 
     public function test_category_show_uses_the_complete_resource(): void
@@ -187,5 +193,29 @@ class ApiInfrastructureTest extends TestCase
         $this->assertIsArray($origins);
         $this->assertNotContains('*', $origins);
         $this->assertContains('http://localhost:3000', $origins);
+    }
+
+    public function test_request_id_is_returned_and_log_context_excludes_query_secrets(): void
+    {
+        $context = [];
+        $logger = Mockery::mock();
+        $logger->shouldReceive('info')
+            ->once()
+            ->with('api.request', Mockery::on(function (array $data) use (&$context): bool {
+                $context = $data;
+
+                return true;
+            }));
+
+        Log::shouldReceive('channel')->once()->andReturn($logger);
+
+        $response = $this->getJson('/api/v1/categories?token=segredo', ['X-Request-Id' => 'req-123'])
+            ->assertOk()
+            ->assertHeader('X-Request-Id', 'req-123');
+
+        $this->assertSame('req-123', $context['request_id']);
+        $this->assertSame('api/v1/categories', $context['path']);
+        $this->assertStringNotContainsString('segredo', json_encode($context) ?: '');
+        $this->assertSame(200, $context['status']);
     }
 }

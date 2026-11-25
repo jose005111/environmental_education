@@ -62,6 +62,13 @@ class AuthenticationTest extends TestCase
         Notification::assertSentTo($user, VerifyEmail::class);
     }
 
+    public function test_register_rejects_invalid_payload(): void
+    {
+        $this->postJson('/api/v1/auth/register', [])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['name', 'email', 'password']);
+    }
+
     public function test_login_returns_a_token_and_validation_errors_are_json(): void
     {
         $user = User::factory()->create([
@@ -110,6 +117,11 @@ class AuthenticationTest extends TestCase
         $this->assertDatabaseHas('personal_access_tokens', ['id' => $other->accessToken->id]);
     }
 
+    public function test_logout_requires_authentication(): void
+    {
+        $this->postJson('/api/v1/auth/logout')->assertUnauthorized();
+    }
+
     public function test_me_requires_authentication_and_only_updates_profile_fields(): void
     {
         $this->getJson('/api/v1/me')->assertUnauthorized();
@@ -135,6 +147,17 @@ class AuthenticationTest extends TestCase
         $this->assertSame('(21) 98888-7777', $user->phone);
         $this->assertTrue($user->isResident());
         $this->assertTrue($user->is_active);
+    }
+
+    public function test_update_profile_validates_fields(): void
+    {
+        $this->actingAsRole(RoleName::RESIDENTE);
+
+        $this->putJson('/api/v1/me', [
+            'name' => str_repeat('a', 256),
+            'phone' => str_repeat('1', 21),
+            'zone_id' => 999999,
+        ])->assertUnprocessable()->assertJsonValidationErrors(['name', 'phone', 'zone_id']);
     }
 
     public function test_middleware_revokes_tokens_of_inactive_accounts(): void

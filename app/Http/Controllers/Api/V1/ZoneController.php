@@ -10,6 +10,7 @@ use App\Http\Resources\ZoneResource;
 use App\Http\Resources\ZoneSummaryResource;
 use App\Models\Zone;
 use App\Support\QueryFilter;
+use App\Support\ReferenceDataCache;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response as HttpResponse;
 
@@ -30,7 +31,11 @@ class ZoneController extends Controller
             defaultSort: 'name',
         );
 
-        $zones = $filter->apply(Zone::query())->paginate($filter->perPage());
+        $zones = ReferenceDataCache::remember(
+            'zones',
+            $request,
+            fn () => $filter->apply(Zone::query())->paginate($filter->perPage()),
+        );
 
         return $this->paginated($zones, ZoneSummaryResource::class, $request);
     }

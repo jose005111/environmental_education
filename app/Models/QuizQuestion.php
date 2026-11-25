@@ -30,13 +30,13 @@ class QuizQuestion extends Model
         return $this->belongsTo(Quiz::class);
     }
 
-    /** @return HasMany<QuizOption, QuizQuestion> */
+    /** @return HasMany<QuizOption, $this> */
     public function options(): HasMany
     {
         return $this->hasMany(QuizOption::class);
     }
 
-    /** @return HasMany<QuizAttemptAnswer, QuizQuestion> */
+    /** @return HasMany<QuizAttemptAnswer, $this> */
     public function answers(): HasMany
     {
         return $this->hasMany(QuizAttemptAnswer::class);

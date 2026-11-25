@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\EventStatus;
 use App\Models\Concerns\DeletesStoredFiles;
 use App\Models\Concerns\HasSlug;
+use Carbon\Carbon;
 use Database\Factories\EventFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,9 +16,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+ * @property string $slug
  * @property EventStatus $status
- * @property \Carbon\Carbon $starts_at
- * @property \Carbon\Carbon $ends_at
+ * @property Carbon $starts_at
+ * @property Carbon $ends_at
  */
 class Event extends Model
 {

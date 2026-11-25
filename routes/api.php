@@ -2,11 +2,19 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\SiteController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\ZoneController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->middleware('throttle:api')->group(function () {
+    Route::get('/public/home', [SiteController::class, 'home'])->name('api.v1.public.home');
+
+    Route::middleware(['auth:sanctum', 'role:administrador'])->group(function () {
+        Route::get('/admin/site', [SiteController::class, 'show'])->name('api.v1.admin.site.show');
+        Route::put('/admin/site', [SiteController::class, 'update'])->name('api.v1.admin.site.update');
+    });
+
     Route::get('/categories', [CategoryController::class, 'index'])
         ->name('api.v1.categories.index');
 

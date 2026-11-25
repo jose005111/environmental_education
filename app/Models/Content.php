@@ -6,6 +6,7 @@ use App\Enums\ContentStatus;
 use App\Enums\ContentType;
 use App\Models\Concerns\DeletesStoredFiles;
 use App\Models\Concerns\HasSlug;
+use Carbon\Carbon;
 use Database\Factories\ContentFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,8 +15,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+ * @property string $slug
  * @property ContentStatus $status
- * @property \Carbon\Carbon|null $published_at
+ * @property Carbon|null $published_at
  */
 class Content extends Model
 {

@@ -231,6 +231,7 @@ class ActivityController extends Controller
         return $this->paginated($participations, ParticipationResource::class, $request);
     }
 
+    /** @return Builder<ActivityParticipation> */
     private function participationQuery(): Builder
     {
         return ActivityParticipation::query()->with(['activity.category', 'user', 'reviewer']);

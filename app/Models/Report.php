@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ReportStatus;
+use Carbon\Carbon;
 use Database\Factories\ReportFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property ReportStatus $status
- * @property \Carbon\Carbon|null $resolved_at
+ * @property Carbon|null $resolved_at
  */
 class Report extends Model
 {

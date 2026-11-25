@@ -4,11 +4,20 @@ namespace App\Models;
 
 use App\Enums\ParticipationStatus;
 use App\Models\Concerns\DeletesStoredFiles;
+use Carbon\Carbon;
 use Database\Factories\ActivityParticipationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
+/**
+ * @property ParticipationStatus $status
+ * @property Carbon|null $submitted_at
+ * @property Carbon|null $reviewed_at
+ * @property-read Activity|null $activity
+ * @property-read User|null $user
+ * @property-read User|null $reviewer
+ */
 class ActivityParticipation extends Pivot
 {
     /** @use HasFactory<ActivityParticipationFactory> */

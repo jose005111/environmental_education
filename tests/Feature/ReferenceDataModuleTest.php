@@ -75,6 +75,8 @@ class ReferenceDataModuleTest extends TestCase
     public function test_write_routes_require_admin_role(): void
     {
         $this->postJson('/api/v1/zones', ['name' => 'Sem permissão'])->assertUnauthorized();
+        $this->getJson('/api/v1/users')->assertUnauthorized();
+        $this->patchJson('/api/v1/users/1', ['is_active' => false])->assertUnauthorized();
 
         $this->actingAsRole(RoleName::RESIDENTE);
 
@@ -122,6 +124,25 @@ class ReferenceDataModuleTest extends TestCase
 
         $this->assertTrue($user->isModerator());
         $this->assertFalse($user->is_active);
+    }
+
+    public function test_missing_reference_records_return_not_found(): void
+    {
+        $this->actingAsRole(RoleName::ADMINISTRADOR);
+
+        $this->putJson('/api/v1/zones/999999', ['name' => 'Inexistente'])->assertNotFound();
+        $this->deleteJson('/api/v1/zones/999999')->assertNotFound();
+
+        $this->getJson('/api/v1/categories/999999')->assertNotFound();
+        $this->putJson('/api/v1/categories/999999', ['name' => 'Inexistente'])->assertNotFound();
+        $this->deleteJson('/api/v1/categories/999999')->assertNotFound();
+    }
+
+    public function test_patching_unknown_user_returns_not_found(): void
+    {
+        $this->actingAsRole(RoleName::ADMINISTRADOR);
+
+        $this->patchJson('/api/v1/users/999999', ['is_active' => false])->assertNotFound();
     }
 
     public function test_user_update_rejects_unknown_role(): void

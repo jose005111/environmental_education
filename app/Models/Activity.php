@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ActivityStatus;
 use App\Models\Concerns\HasSlug;
+use Carbon\Carbon;
 use Database\Factories\ActivityFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,9 +15,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+ * @property string $slug
  * @property ActivityStatus $status
- * @property \Carbon\Carbon|null $starts_on
- * @property \Carbon\Carbon|null $ends_on
+ * @property Carbon|null $starts_on
+ * @property Carbon|null $ends_on
+ * @property-read Category|null $category
+ * @property-read User|null $author
  */
 class Activity extends Model
 {

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\ProcessUploadedImage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -32,6 +33,8 @@ final class StoredFile
 
         $disk = config('uploads.disk', 'public');
         $path = $file->store($directories[$directory], ['disk' => $disk]);
+
+        ProcessUploadedImage::dispatch($path, $disk);
 
         return [
             'path' => $path,

@@ -47,6 +47,21 @@ class EventModuleTest extends TestCase
         $this->getJson("/api/v1/events/{$draft->slug}")->assertNotFound();
     }
 
+    public function test_public_event_detail_does_not_expose_author_contact(): void
+    {
+        $author = User::factory()->create([
+            'name' => 'Autor do Evento',
+            'email' => 'autor-evento@ambiente.local',
+        ]);
+        $event = Event::factory()->published()->for($author, 'author')->create();
+
+        $this->getJson("/api/v1/events/{$event->slug}")
+            ->assertOk()
+            ->assertJsonPath('data.author.name', 'Autor do Evento')
+            ->assertJsonMissingPath('data.author.email')
+            ->assertJsonMissingPath('data.author.is_active');
+    }
+
     public function test_vagas_livres_ignore_cancelled_registrations_and_allow_unlimited_capacity(): void
     {
         $limited = Event::factory()->published()->create(['capacity' => 2]);

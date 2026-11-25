@@ -1,0 +1,2752 @@
+{
+  "info": {
+    "name": "Ambiente API",
+    "description": "Coleção gerada a partir do OpenAPI da API da Plataforma Digital para Educação Ambiental em Comunidades. Faça login para preencher automaticamente a variável token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Activity",
+      "item": [
+        {
+          "name": "Activities Index",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/activities",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "activities"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Activities Store",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/activities",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "activities"
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de pedido: `{\n \"title\": \"Oficina de compostagem\",\n \"summary\": \"Aprender a compostar resíduos.\",\n \"instructions\": \"Trazer luvas.\",\n \"category_id\": 1,\n \"status\": \"aberta\"\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": 1,\n  \"title\": \"title\",\n  \"summary\": \"summary\",\n  \"instructions\": \"instructions\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activities Show",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/activities/:slug",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "activities",
+                ":slug"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": "slug",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Activities Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/activities/:activity",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "activities",
+                ":activity"
+              ],
+              "variable": [
+                {
+                  "key": "activity",
+                  "value": "1",
+                  "description": "The activity ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": 1,\n  \"title\": \"title\",\n  \"summary\": \"summary\",\n  \"instructions\": \"instructions\",\n  \"starts_on\": \"2026-12-10T09:00:00Z\",\n  \"ends_on\": \"2026-12-10T09:00:00Z\",\n  \"status\": \"rascunho\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activities Destroy",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/activities/:activity",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "activities",
+                ":activity"
+              ],
+              "variable": [
+                {
+                  "key": "activity",
+                  "value": "1",
+                  "description": "The activity ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Activities Join",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/activities/:activity/join",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "activities",
+                ":activity",
+                "join"
+              ],
+              "variable": [
+                {
+                  "key": "activity",
+                  "value": "1",
+                  "description": "The activity ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: residente ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Activities Submit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/activities/:activity/submit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "activities",
+                ":activity",
+                "submit"
+              ],
+              "variable": [
+                {
+                  "key": "activity",
+                  "value": "1",
+                  "description": "The activity ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: residente responsável pela participação.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "notes",
+                  "type": "text",
+                  "value": "notes",
+                  "disabled": false
+                },
+                {
+                  "key": "proof_photo",
+                  "type": "file",
+                  "src": [],
+                  "disabled": false
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activities Participations Index",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/activity-participations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "activity-participations"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Activities Participations Review",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/activity-participations/:participation/review",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "activity-participations",
+                ":participation",
+                "review"
+              ],
+              "variable": [
+                {
+                  "key": "participation",
+                  "value": "1",
+                  "description": "The participation ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"validado\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activities Me Participations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/me/participations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "me",
+                "participations"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: qualquer utilizador autenticado.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Auth Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de pedido: `{\n \"name\": \"Maria Silva\",\n \"email\": \"maria@example.test\",\n \"password\": \"Password123!\",\n \"password_confirmation\": \"Password123!\",\n \"zone_id\": 1\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"name\",\n  \"email\": \"usuario@example.test\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password_confirmation\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Auth Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de pedido: `{\n \"email\": \"maria@example.test\",\n \"password\": \"Password123!\",\n \"device_name\": \"mobile\"\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@example.test\",\n  \"password\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "disabled": false,
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const token = pm.response.json().token;",
+                  "    if (token) pm.collectionVariables.set('token', token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/auth/forgot-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "forgot-password"
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de pedido: `{\n \"email\": \"maria@example.test\"\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@example.test\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Auth Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/auth/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "reset-password"
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de pedido: `{\n \"email\": \"maria@example.test\",\n \"token\": \"token-recebido-por-email\",\n \"password\": \"NovaPassword123!\",\n \"password_confirmation\": \"NovaPassword123!\"\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@example.test\",\n  \"token\": \"token\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password_confirmation\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/auth/email/verify/:id/:hash",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "email",
+                "verify",
+                ":id",
+                ":hash"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "id",
+                  "description": ""
+                },
+                {
+                  "key": "hash",
+                  "value": "hash",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Auth Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Papel exigido: qualquer utilizador autenticado.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "me"
+              ]
+            },
+            "description": "Papel exigido: qualquer utilizador autenticado.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Me Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "me"
+              ]
+            },
+            "description": "Papel exigido: qualquer utilizador autenticado.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de pedido: `{\n \"name\": \"Maria Silva\",\n \"phone\": \"(21) 98888-7777\"\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"name\",\n  \"phone\": \"phone\",\n  \"zone_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Auth Verification Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/auth/email/verification-notification",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "email",
+                "verification-notification"
+              ]
+            },
+            "description": "Papel exigido: qualquer utilizador autenticado.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Category",
+      "item": [
+        {
+          "name": "Categories Index",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "categories"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Categories Store",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "categories"
+              ]
+            },
+            "description": "Papel exigido: administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"name\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Categories Show",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/categories/:category",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "categories",
+                ":category"
+              ],
+              "variable": [
+                {
+                  "key": "category",
+                  "value": "1",
+                  "description": "The category ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Categories Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/categories/:category",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "categories",
+                ":category"
+              ],
+              "variable": [
+                {
+                  "key": "category",
+                  "value": "1",
+                  "description": "The category ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"name\",\n  \"slug\": \"slug\",\n  \"description\": \"description\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Categories Destroy",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/categories/:category",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "categories",
+                ":category"
+              ],
+              "variable": [
+                {
+                  "key": "category",
+                  "value": "1",
+                  "description": "The category ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Content",
+      "item": [
+        {
+          "name": "Contents Index",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/contents",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "contents"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Contents Store",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/contents",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "contents"
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de pedido: `{\n \"title\": \"Separar resíduos em casa\",\n \"summary\": \"Guia rápido para separação de resíduos.\",\n \"body\": \"Conteúdo completo..\",\n \"type\": \"artigo\",\n \"category_id\": 1\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "category_id",
+                  "type": "text",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "title",
+                  "type": "text",
+                  "value": "title",
+                  "disabled": false
+                },
+                {
+                  "key": "summary",
+                  "type": "text",
+                  "value": "summary",
+                  "disabled": false
+                },
+                {
+                  "key": "body",
+                  "type": "text",
+                  "value": "body",
+                  "disabled": false
+                },
+                {
+                  "key": "type",
+                  "type": "text",
+                  "value": "artigo",
+                  "disabled": false
+                },
+                {
+                  "key": "cover_image",
+                  "type": "file",
+                  "src": [],
+                  "disabled": false
+                },
+                {
+                  "key": "media_url",
+                  "type": "text",
+                  "value": "media_url",
+                  "disabled": false
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Contents Show",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/contents/:slug",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "contents",
+                ":slug"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": "slug",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Contents Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/contents/:content",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "contents",
+                ":content"
+              ],
+              "variable": [
+                {
+                  "key": "content",
+                  "value": "1",
+                  "description": "The content ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "category_id",
+                  "type": "text",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "title",
+                  "type": "text",
+                  "value": "title",
+                  "disabled": false
+                },
+                {
+                  "key": "summary",
+                  "type": "text",
+                  "value": "summary",
+                  "disabled": false
+                },
+                {
+                  "key": "body",
+                  "type": "text",
+                  "value": "body",
+                  "disabled": false
+                },
+                {
+                  "key": "type",
+                  "type": "text",
+                  "value": "artigo",
+                  "disabled": false
+                },
+                {
+                  "key": "cover_image",
+                  "type": "file",
+                  "src": [],
+                  "disabled": false
+                },
+                {
+                  "key": "media_url",
+                  "type": "text",
+                  "value": "media_url",
+                  "disabled": false
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Contents Destroy",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/contents/:content",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "contents",
+                ":content"
+              ],
+              "variable": [
+                {
+                  "key": "content",
+                  "value": "1",
+                  "description": "The content ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Contents Publish",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/contents/:content/publish",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "contents",
+                ":content",
+                "publish"
+              ],
+              "variable": [
+                {
+                  "key": "content",
+                  "value": "1",
+                  "description": "The content ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"rascunho\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Event",
+      "item": [
+        {
+          "name": "Events Index",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Events Store",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "events"
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de pedido: `{\n \"title\": \"Feira de reciclagem\",\n \"description\": \"Feira comunitária.\",\n \"location\": \"Praça Central\",\n \"starts_at\": \"2026-12-10T09:00:00Z\",\n \"ends_at\": \"2026-12-10T12:00:00Z\",\n \"category_id\": 1,\n \"zone_id\": 1\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "category_id",
+                  "type": "text",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "zone_id",
+                  "type": "text",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "title",
+                  "type": "text",
+                  "value": "title",
+                  "disabled": false
+                },
+                {
+                  "key": "description",
+                  "type": "text",
+                  "value": "description",
+                  "disabled": false
+                },
+                {
+                  "key": "location",
+                  "type": "text",
+                  "value": "location",
+                  "disabled": false
+                },
+                {
+                  "key": "starts_at",
+                  "type": "text",
+                  "value": "2026-12-10T09:00:00Z",
+                  "disabled": false
+                },
+                {
+                  "key": "ends_at",
+                  "type": "text",
+                  "value": "2026-12-10T09:00:00Z",
+                  "disabled": false
+                },
+                {
+                  "key": "capacity",
+                  "type": "text",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "cover",
+                  "type": "file",
+                  "src": [],
+                  "disabled": false
+                },
+                {
+                  "key": "cover_image",
+                  "type": "text",
+                  "value": "cover_image",
+                  "disabled": false
+                },
+                {
+                  "key": "status",
+                  "type": "text",
+                  "value": "rascunho",
+                  "disabled": false
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Events Show",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/events/:slug",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "events",
+                ":slug"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": "slug",
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Events Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/events/:event",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "events",
+                ":event"
+              ],
+              "variable": [
+                {
+                  "key": "event",
+                  "value": "1",
+                  "description": "The event ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "category_id",
+                  "type": "text",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "zone_id",
+                  "type": "text",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "title",
+                  "type": "text",
+                  "value": "title",
+                  "disabled": false
+                },
+                {
+                  "key": "description",
+                  "type": "text",
+                  "value": "description",
+                  "disabled": false
+                },
+                {
+                  "key": "location",
+                  "type": "text",
+                  "value": "location",
+                  "disabled": false
+                },
+                {
+                  "key": "starts_at",
+                  "type": "text",
+                  "value": "2026-12-10T09:00:00Z",
+                  "disabled": false
+                },
+                {
+                  "key": "ends_at",
+                  "type": "text",
+                  "value": "2026-12-10T09:00:00Z",
+                  "disabled": false
+                },
+                {
+                  "key": "capacity",
+                  "type": "text",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "cover",
+                  "type": "file",
+                  "src": [],
+                  "disabled": false
+                },
+                {
+                  "key": "cover_image",
+                  "type": "text",
+                  "value": "cover_image",
+                  "disabled": false
+                },
+                {
+                  "key": "status",
+                  "type": "text",
+                  "value": "rascunho",
+                  "disabled": false
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Events Destroy",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/events/:event",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "events",
+                ":event"
+              ],
+              "variable": [
+                {
+                  "key": "event",
+                  "value": "1",
+                  "description": "The event ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Events Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/events/:event/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "events",
+                ":event",
+                "register"
+              ],
+              "variable": [
+                {
+                  "key": "event",
+                  "value": "1",
+                  "description": "The event ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: residente ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Events Cancel Registration",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/events/:event/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "events",
+                ":event",
+                "register"
+              ],
+              "variable": [
+                {
+                  "key": "event",
+                  "value": "1",
+                  "description": "The event ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: residente ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Events Registrations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/events/:event/registrations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "events",
+                ":event",
+                "registrations"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ],
+              "variable": [
+                {
+                  "key": "event",
+                  "value": "1",
+                  "description": "The event ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Events Mark Present",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/event-registrations/:eventRegistration",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "event-registrations",
+                ":eventRegistration"
+              ],
+              "variable": [
+                {
+                  "key": "eventRegistration",
+                  "value": "1",
+                  "description": "The event registration ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: qualquer utilizador autenticado.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Events My Registrations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/me/registrations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "me",
+                "registrations"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: qualquer utilizador autenticado.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Quiz",
+      "item": [
+        {
+          "name": "Quizzes Index",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/quizzes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "quizzes"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: residente (leitura), moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Quizzes Store",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/quizzes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "quizzes"
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de pedido: `{\n \"title\": \"Quiz de reciclagem\",\n \"description\": \"Perguntas sobre separação de resíduos.\",\n \"category_id\": 1,\n \"status\": \"publicado\",\n \"questions\": [\n {\n \"statement\": \"Onde vai o papel?\",\n \"options\": [\n {\n \"text\": \"Lixo comum\",\n \"is_correct\": false,\n \"position\": 1\n },\n {\n \"text\": \"Reciclagem\",\n \"is_correct\": true,\n \"position\": 2\n }\n ]\n }\n ]\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": 1,\n  \"title\": \"title\",\n  \"questions\": [\n    {\n      \"statement\": \"statement\",\n      \"options\": [\n        {\n          \"text\": \"text\",\n          \"is_correct\": false\n        }\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Quizzes Show",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/quizzes/:quiz",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "quizzes",
+                ":quiz"
+              ],
+              "variable": [
+                {
+                  "key": "quiz",
+                  "value": "1",
+                  "description": "The quiz ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: residente (leitura), moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Quizzes Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/quizzes/:quiz",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "quizzes",
+                ":quiz"
+              ],
+              "variable": [
+                {
+                  "key": "quiz",
+                  "value": "1",
+                  "description": "The quiz ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": 1,\n  \"title\": \"title\",\n  \"description\": \"description\",\n  \"status\": \"rascunho\",\n  \"questions\": [\n    {\n      \"statement\": \"statement\",\n      \"options\": [\n        {\n          \"text\": \"text\",\n          \"is_correct\": false\n        }\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Quizzes Destroy",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/quizzes/:quiz",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "quizzes",
+                ":quiz"
+              ],
+              "variable": [
+                {
+                  "key": "quiz",
+                  "value": "1",
+                  "description": "The quiz ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Quizzes Attempts Store",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/quizzes/:quiz/attempts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "quizzes",
+                ":quiz",
+                "attempts"
+              ],
+              "variable": [
+                {
+                  "key": "quiz",
+                  "value": "1",
+                  "description": "The quiz ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: residente ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answers\": [\n    {\n      \"question_id\": 1,\n      \"option_id\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Quizzes Attempts Index",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/me/attempts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "me",
+                "attempts"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: residente (leitura), moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Report",
+      "item": [
+        {
+          "name": "Reports Public",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/public",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                "public"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Reports Show",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/:report",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                ":report"
+              ],
+              "variable": [
+                {
+                  "key": "report",
+                  "value": "1",
+                  "description": "The report ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: visitante (reporte público), proprietário ou moderador/administrador.\n\nEndpoint público; não requer token.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Reports Store",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports"
+              ]
+            },
+            "description": "Papel exigido: residente ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de pedido: `{\n \"title\": \"Lixo acumulado na praça\",\n \"description\": \"Acumulação junto ao banco.\",\n \"category_id\": 1,\n \"zone_id\": 1,\n \"is_public\": true\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "zone_id",
+                  "type": "text",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "category_id",
+                  "type": "text",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "title",
+                  "type": "text",
+                  "value": "title",
+                  "disabled": false
+                },
+                {
+                  "key": "description",
+                  "type": "text",
+                  "value": "description",
+                  "disabled": false
+                },
+                {
+                  "key": "location_note",
+                  "type": "text",
+                  "value": "location_note",
+                  "disabled": false
+                },
+                {
+                  "key": "latitude",
+                  "type": "text",
+                  "value": "1.0",
+                  "disabled": false
+                },
+                {
+                  "key": "longitude",
+                  "type": "text",
+                  "value": "1.0",
+                  "disabled": false
+                },
+                {
+                  "key": "photos",
+                  "type": "file",
+                  "src": [],
+                  "disabled": false
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reports Index",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Reports Mine",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/me/reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "me",
+                "reports"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: qualquer utilizador autenticado.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Reports Assign",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/:report/assign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                ":report",
+                "assign"
+              ],
+              "variable": [
+                {
+                  "key": "report",
+                  "value": "1",
+                  "description": "The report ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de pedido: `{\n \"assigned_to\": 2\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assigned_to\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reports Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/reports/:report/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "reports",
+                ":report",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "report",
+                  "value": "1",
+                  "description": "The report ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: moderador ou administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de pedido: `{\n \"status\": \"em_analise\"\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"recebido\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Users Index",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Users Update",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/users/:user",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "users",
+                ":user"
+              ],
+              "variable": [
+                {
+                  "key": "user",
+                  "value": "1",
+                  "description": "The user ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de pedido: `{\n \"role_id\": 3,\n \"is_active\": false\n}`\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role_id\": 1,\n  \"zone_id\": 1,\n  \"is_active\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Zone",
+      "item": [
+        {
+          "name": "Zones Index",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/zones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "zones"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "1",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sort",
+                  "value": "sort",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "search",
+                  "value": "search",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "filter[]",
+                  "value": "",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Papel exigido: visitante.\n\nEndpoint público; não requer token.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "Zones Store",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/zones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "zones"
+              ]
+            },
+            "description": "Papel exigido: administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"name\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Zones Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/zones/:zone",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "zones",
+                ":zone"
+              ],
+              "variable": [
+                {
+                  "key": "zone",
+                  "value": "1",
+                  "description": "The zone ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"name\",\n  \"description\": \"description\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Zones Destroy",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/zones/:zone",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "zones",
+                ":zone"
+              ],
+              "variable": [
+                {
+                  "key": "zone",
+                  "value": "1",
+                  "description": "The zone ID"
+                }
+              ]
+            },
+            "description": "Papel exigido: administrador.\n\nEnvie `Authorization: Bearer <token>`.\n\nExemplo de resposta de erro: `{\"status\":422,\"code\":\"validation_error\",\"message\":\"Os dados fornecidos são inválidos.\",\"errors\":{}}`."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

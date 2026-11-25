@@ -10,4 +10,5 @@ return [
         'covers' => 'covers',
     ],
     'report_photos_limit' => (int) env('REPORT_PHOTO_LIMIT', 5),
+    'thumbnail_max_dimension' => (int) env('UPLOAD_THUMBNAIL_MAX_DIMENSION', 1200),
 ];

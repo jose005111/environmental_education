@@ -3,7 +3,6 @@
 namespace App\Models\Concerns;
 
 use App\Services\StoredFile;
-use Illuminate\Database\Eloquent\Model;
 
 trait DeletesStoredFiles
 {
@@ -14,7 +13,7 @@ trait DeletesStoredFiles
 
     public static function bootDeletesStoredFiles(): void
     {
-        static::deleted(function (Model $model): void {
+        static::deleted(function (self $model): void {
             foreach ($model->storedFileColumns() as $column) {
                 app(StoredFile::class)->delete($model->getAttribute($column));
             }

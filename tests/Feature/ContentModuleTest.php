@@ -56,6 +56,21 @@ class ContentModuleTest extends TestCase
             ->assertJsonCount(1, 'data');
     }
 
+    public function test_public_index_rejects_invalid_query_parameters(): void
+    {
+        $this->getJson('/api/v1/contents?per_page=51')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('per_page');
+
+        $this->getJson('/api/v1/contents?filter[inexistente]=valor')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('filter.inexistente');
+
+        $this->getJson('/api/v1/contents?sort=inexistente')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('sort');
+    }
+
     public function test_public_detail_increments_views_count(): void
     {
         $content = Content::factory()->published()->create([

@@ -17,7 +17,7 @@ class EnsureAccountActive
 
         if ($user instanceof User && ! $user->is_active) {
             $user->tokens()->delete();
-            $guard->forgetUser();
+            $request->setUserResolver(fn () => null);
 
             return response()->json([
                 'status' => 403,

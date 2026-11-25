@@ -122,7 +122,7 @@ class ReportModuleTest extends TestCase
 
         $data = $response->json('data.0');
 
-        foreach (['user_id', 'author', 'email', 'phone', 'latitude', 'longitude'] as $key) {
+        foreach (['user_id', 'author', 'email', 'phone', 'latitude', 'longitude', 'assigned_to'] as $key) {
             $this->assertArrayNotHasKey($key, $data);
         }
 
@@ -396,6 +396,7 @@ class ReportModuleTest extends TestCase
 
         $report = Report::factory()->for($author)->create([
             'status' => ReportStatus::EM_ANALISE,
+            'assigned_to' => $moderator->id,
             'latitude' => '-22.1111111',
             'longitude' => '-43.1111111',
         ]);
@@ -411,6 +412,7 @@ class ReportModuleTest extends TestCase
             ->assertJsonPath('data.latitude', '-22.1111111')
             ->assertJsonPath('data.longitude', '-43.1111111')
             ->assertJsonPath('data.phone', '888777666')
+            ->assertJsonPath('data.assigned_to', $moderator->id)
             ->assertJsonPath('data.updates.0.note', 'Nota interna')
             ->assertJsonPath('data.updates.0.user.id', $moderator->id);
 
@@ -418,15 +420,24 @@ class ReportModuleTest extends TestCase
         $this->actingAs($resident, 'sanctum');
 
         $own = Report::factory()->for($resident)->create([
+            'assigned_to' => $moderator->id,
             'latitude' => '-22.2222222',
             'longitude' => '-43.2222222',
         ]);
+
+        ReportUpdate::factory()
+            ->for($own)
+            ->for($moderator)
+            ->transition(ReportStatus::RECEBIDO, ReportStatus::EM_ANALISE, 'Nota interna')
+            ->create();
 
         $response = $this->getJson("/api/v1/reports/{$own->id}")->assertOk();
 
         $this->assertArrayNotHasKey('latitude', $response->json('data'));
         $this->assertArrayNotHasKey('longitude', $response->json('data'));
         $this->assertArrayNotHasKey('phone', $response->json('data'));
+        $this->assertArrayNotHasKey('assigned_to', $response->json('data'));
+        $this->assertArrayNotHasKey('note', $response->json('data.updates.0'));
         $this->assertStringNotContainsString('-22.2222222', (string) $response->getContent());
     }
 

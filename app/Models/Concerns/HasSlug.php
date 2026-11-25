@@ -2,8 +2,8 @@
 
 namespace App\Models\Concerns;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
 trait HasSlug
@@ -12,7 +12,7 @@ trait HasSlug
 
     protected static function bootHasSlug(): void
     {
-        static::creating(function (Model $model): void {
+        static::creating(function (self $model): void {
             if (filled($model->slug)) {
                 return;
             }
@@ -30,12 +30,12 @@ trait HasSlug
         });
     }
 
-    private static function slugExists(string $slug): bool
+    protected static function slugExists(string $slug): bool
     {
         $query = static::query();
 
         if (in_array(SoftDeletes::class, class_uses_recursive(static::class), true)) {
-            $query->withTrashed();
+            $query->withoutGlobalScope(SoftDeletingScope::class);
         }
 
         return $query->where('slug', $slug)->exists();

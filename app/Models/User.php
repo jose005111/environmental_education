@@ -16,6 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/** @property-read Role|null $role */
 #[Fillable(['name', 'email', 'password', 'role_id', 'zone_id', 'phone', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmailContract
@@ -57,6 +58,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return $this->hasRole(RoleName::RESIDENTE);
     }
 
+    /** @return BelongsTo<Role, $this> */
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);

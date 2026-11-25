@@ -10,6 +10,7 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CategorySummaryResource;
 use App\Models\Category;
 use App\Support\QueryFilter;
+use App\Support\ReferenceDataCache;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response as HttpResponse;
 
@@ -33,7 +34,11 @@ class CategoryController extends Controller
             defaultSort: 'name',
         );
 
-        $categories = $filter->apply(Category::query())->paginate($filter->perPage());
+        $categories = ReferenceDataCache::remember(
+            'categories',
+            $request,
+            fn () => $filter->apply(Category::query())->paginate($filter->perPage()),
+        );
 
         return $this->paginated($categories, CategorySummaryResource::class, $request);
     }

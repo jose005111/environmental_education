@@ -324,6 +324,42 @@ class QuizModuleTest extends TestCase
             ->assertJsonCount(2, 'data');
     }
 
+    public function test_index_filters_searches_and_sorts_quizzes(): void
+    {
+        $this->actingAsRole(RoleName::ADMINISTRADOR);
+
+        $category = Category::factory()->create(['name' => 'Agua']);
+        $otherCategory = Category::factory()->create(['name' => 'Lixo']);
+
+        $published = Quiz::factory()->published()->withQuestions(1)->create([
+            'title' => 'Quiz de Agua',
+            'category_id' => $category->id,
+        ]);
+        $draft = Quiz::factory()->withQuestions(1)->create([
+            'title' => 'Quiz de Lixo',
+            'category_id' => $otherCategory->id,
+        ]);
+
+        $this->getJson('/api/v1/quizzes?filter[status]=rascunho')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $draft->id);
+
+        $this->getJson('/api/v1/quizzes?filter[category]='.$category->id)
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $published->id);
+
+        $this->getJson('/api/v1/quizzes?search=Agua')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $published->id);
+
+        $this->getJson('/api/v1/quizzes?sort=-title')
+            ->assertOk()
+            ->assertJsonPath('data.0.title', 'Quiz de Lixo');
+    }
+
     public function test_unauthenticated_requests_are_rejected(): void
     {
         $this->getJson('/api/v1/quizzes')->assertUnauthorized();
