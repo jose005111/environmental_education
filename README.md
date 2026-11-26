@@ -87,6 +87,8 @@ python3 postman/generate.py openapi.json
 
 O administrador consulta e actualiza os blocos editáveis por `GET /api/v1/admin/site` e `PUT /api/v1/admin/site`, usando um token de administrador. A configuração começa vazia e é criada na primeira actualização. Execute as migrations para criar `site_settings` antes de usar estes endpoints.
 
+Moderadores e administradores podem pesquisar moradores por `GET /api/v1/residents?search=termo`, consultar `GET /api/v1/residents/{id}` e obter o histórico paginado em `GET /api/v1/residents/{id}/records?type=quizzes|activities|events|reports`. O detalhe de uma actividade devolve `my_participation_status` e o de um evento devolve `my_registration_status` para a conta autenticada, permitindo apresentar o estado da inscrição no cliente. No detalhe de quizzes, a explicação e a opção correcta são devolvidas apenas a moderadores e administradores.
+
 ## Variáveis de ambiente relevantes
 
 | Variável | Padrão | Finalidade |

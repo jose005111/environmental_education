@@ -25,6 +25,28 @@ class QuizModuleTest extends TestCase
         $this->seed(RoleSeeder::class);
     }
 
+    public function test_moderator_can_list_quiz_attempts_with_scores_and_resident_cannot(): void
+    {
+        $quiz = Quiz::factory()->published()->create();
+        $attempt = QuizAttempt::factory()->for($quiz)->create([
+            'total_questions' => 4,
+            'correct_count' => 3,
+        ]);
+        QuizAttempt::factory()->create();
+
+        $this->getJson("/api/v1/quizzes/{$quiz->id}/attempts")->assertUnauthorized();
+        $this->actingAsRole(RoleName::RESIDENTE);
+        $this->getJson("/api/v1/quizzes/{$quiz->id}/attempts")->assertForbidden();
+
+        $this->actingAsRole(RoleName::MODERADOR);
+        $this->getJson("/api/v1/quizzes/{$quiz->id}/attempts")->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $attempt->id)
+            ->assertJsonPath('data.0.user.name', $attempt->user->name)
+            ->assertJsonPath('data.0.correct_count', 3)
+            ->assertJsonPath('data.0.total_questions', 4);
+    }
+
     public function test_moderator_creates_quiz_with_nested_questions_and_options(): void
     {
         $moderator = $this->actingAsRole(RoleName::MODERADOR);
@@ -47,7 +69,8 @@ class QuizModuleTest extends TestCase
             $this->assertTrue($question->options->firstWhere('position', 1)->is_correct);
         }
 
-        $this->assertStringNotContainsString('is_correct', $response->getContent());
+        $response->assertJsonPath('data.questions.0.options.1.is_correct', true)
+            ->assertJsonPath('data.questions.0.explanation', 'Explicação 0');
         $this->assertDatabaseCount('quizzes', 1);
         $this->assertDatabaseCount('quiz_questions', 2);
         $this->assertDatabaseCount('quiz_options', 6);

@@ -66,7 +66,8 @@ class ActivityModuleTest extends TestCase
         $this->actingAsRole('moderador');
 
         $this->getJson("/api/v1/activities/{$draft->slug}")
-            ->assertNotFound();
+            ->assertOk()
+            ->assertJsonPath('data.status', 'rascunho');
     }
 
     public function test_moderator_creates_activity_and_invalid_payloads_are_rejected(): void
@@ -140,6 +141,72 @@ class ActivityModuleTest extends TestCase
         $this->assertSoftDeleted('activities', ['id' => $activity->id]);
 
         $this->deleteJson('/api/v1/activities/999999')->assertNotFound();
+    }
+
+    public function test_activity_photos_can_be_added_and_removed_on_edit_with_category_preserved(): void
+    {
+        $category = Category::factory()->create();
+        $this->actingAsRole('moderador');
+
+        $created = $this->post('/api/v1/activities', [
+            'category_id' => $category->id,
+            'title' => 'Oficina com fotografias',
+            'summary' => 'Registo da oficina.',
+            'instructions' => 'Trazer material.',
+            'status' => 'aberta',
+            'photos' => [UploadedFile::fake()->image('primeira.jpg')],
+        ])->assertCreated()->assertJsonPath('data.category.name', $category->name);
+
+        $id = $created->json('data.id');
+        $photoId = $created->json('data.photos.0.id');
+        $path = Activity::findOrFail($id)->photos()->firstOrFail()->path;
+        Storage::disk('public')->assertExists($path);
+        $this->getJson("/api/v1/activities/{$created->json('data.slug')}")
+            ->assertJsonPath('data.photos.0.id', $photoId);
+
+        $this->post("/api/v1/activities/{$id}", [
+            '_method' => 'PUT',
+            'category_id' => $category->id,
+            'removed_photo_ids' => [$photoId],
+            'photos' => [UploadedFile::fake()->image('segunda.png')],
+        ])->assertOk()->assertJsonCount(1, 'data.photos');
+
+        Storage::disk('public')->assertMissing($path);
+        $this->assertDatabaseMissing('activity_photos', ['id' => $photoId]);
+        $this->assertDatabaseCount('activity_photos', 1);
+    }
+
+    public function test_activity_rejects_more_than_five_photos(): void
+    {
+        $this->actingAsRole('moderador');
+        $activity = Activity::factory()->create();
+
+        $this->post("/api/v1/activities/{$activity->id}", [
+            '_method' => 'PUT',
+            'photos' => array_map(fn ($number) => UploadedFile::fake()->image("{$number}.jpg"), range(1, 6)),
+        ])->assertUnprocessable()->assertJsonValidationErrors('photos');
+    }
+
+    public function test_activity_cannot_remove_another_activity_photo_or_exceed_total_limit(): void
+    {
+        $this->actingAsRole('moderador');
+        $activity = Activity::factory()->create();
+        $other = Activity::factory()->create();
+        $otherPhoto = $other->photos()->create(['path' => 'activities/other.jpg']);
+        foreach (range(1, 5) as $number) {
+            $activity->photos()->create(['path' => "activities/{$number}.jpg"]);
+        }
+
+        $this->putJson("/api/v1/activities/{$activity->id}", [
+            'removed_photo_ids' => [$otherPhoto->id],
+        ])->assertUnprocessable()->assertJsonValidationErrors('removed_photo_ids.0');
+
+        $this->post("/api/v1/activities/{$activity->id}", [
+            '_method' => 'PUT',
+            'photos' => [UploadedFile::fake()->image('extra.jpg')],
+        ])->assertUnprocessable()->assertJsonValidationErrors('photos');
+
+        $this->assertDatabaseCount('activity_photos', 6);
     }
 
     public function test_activity_with_participations_cannot_be_deleted(): void

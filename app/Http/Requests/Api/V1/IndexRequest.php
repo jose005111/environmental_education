@@ -9,7 +9,7 @@ class IndexRequest extends FormRequest
 {
     private const ALLOWED = [
         'api.v1.contents.index' => [
-            'filters' => ['category', 'type'],
+            'filters' => ['category', 'type', 'status'],
             'sorts' => ['title', 'published_at', 'views_count', 'created_at'],
         ],
         'api.v1.activities.index' => [
@@ -42,6 +42,10 @@ class IndexRequest extends FormRequest
         ],
         'api.v1.quizzes.attempts.index' => [
             'filters' => ['quiz_id'],
+            'sorts' => ['created_at', 'completed_at'],
+        ],
+        'api.v1.quizzes.attempts.moderation' => [
+            'filters' => [],
             'sorts' => ['created_at', 'completed_at'],
         ],
         'api.v1.reports.public' => [

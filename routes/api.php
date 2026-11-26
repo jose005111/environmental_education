@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\ResidentOverviewController;
 use App\Http\Controllers\Api\V1\SiteController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\ZoneController;
@@ -35,6 +36,12 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
 
         Route::get('/users', [UserController::class, 'index'])->name('api.v1.users.index');
         Route::patch('/users/{user}', [UserController::class, 'update'])->name('api.v1.users.update');
+    });
+
+    Route::middleware(['auth:sanctum', 'role:moderador,administrador'])->group(function () {
+        Route::get('/residents', [ResidentOverviewController::class, 'index'])->name('api.v1.residents.index');
+        Route::get('/residents/{resident}', [ResidentOverviewController::class, 'show'])->name('api.v1.residents.show');
+        Route::get('/residents/{resident}/records', [ResidentOverviewController::class, 'records'])->name('api.v1.residents.records');
     });
 
     Route::post('/auth/register', [AuthController::class, 'register'])

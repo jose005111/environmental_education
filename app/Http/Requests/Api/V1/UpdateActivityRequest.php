@@ -23,6 +23,10 @@ class UpdateActivityRequest extends FormRequest
             'starts_on' => ['sometimes', 'nullable', 'date'],
             'ends_on' => ['sometimes', 'nullable', 'date', 'after_or_equal:starts_on'],
             'status' => ['sometimes', 'required', Rule::enum(ActivityStatus::class)],
+            'photos' => ['sometimes', 'array', 'max:5'],
+            'photos.*' => ['required', 'file', 'image', 'mimetypes:image/jpeg,image/png,image/webp', 'max:5120'],
+            'removed_photo_ids' => ['sometimes', 'array'],
+            'removed_photo_ids.*' => ['integer', 'distinct', Rule::exists('activity_photos', 'id')->where('activity_id', $this->route('activity')?->id)],
         ];
     }
 
@@ -34,6 +38,7 @@ class UpdateActivityRequest extends FormRequest
             'ends_on.date' => 'A data de fim deve ser uma data válida.',
             'ends_on.after_or_equal' => 'A data de fim não pode ser anterior à data de início.',
             'status.enum' => 'O estado da actividade é inválido.',
+            'photos.max' => 'A actividade pode ter no máximo 5 fotografias.',
         ];
     }
 }

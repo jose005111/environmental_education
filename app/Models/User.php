@@ -16,7 +16,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-/** @property-read Role|null $role */
+/**
+ * @property string $name
+ * @property string $email
+ * @property string|null $phone
+ * @property bool $is_active
+ * @property-read Role|null $role
+ * @property-read Zone|null $zone
+ */
 #[Fillable(['name', 'email', 'password', 'role_id', 'zone_id', 'phone', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmailContract

@@ -129,4 +129,22 @@ class QuizController extends Controller
 
         return $this->paginated($attempts, QuizAttemptResource::class, $request);
     }
+
+    public function attempts(IndexRequest $request, Quiz $quiz): JsonResponse
+    {
+        Gate::authorize('update', $quiz);
+
+        $filter = new QueryFilter(
+            $request,
+            sorts: ['created_at' => 'created_at', 'completed_at' => 'completed_at'],
+            search: [],
+            defaultSort: '-completed_at',
+        );
+
+        $attempts = $filter->apply(
+            QuizAttempt::query()->where('quiz_id', $quiz->id)->with('user')
+        )->paginate($filter->perPage());
+
+        return $this->paginated($attempts, QuizAttemptResource::class, $request);
+    }
 }

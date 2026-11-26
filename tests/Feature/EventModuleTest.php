@@ -44,7 +44,8 @@ class EventModuleTest extends TestCase
         $this->getJson('/api/v1/events/slug-inexistente')->assertNotFound();
 
         $this->actingAsRole(RoleName::MODERADOR);
-        $this->getJson("/api/v1/events/{$draft->slug}")->assertNotFound();
+        $this->getJson("/api/v1/events/{$draft->slug}")->assertOk()
+            ->assertJsonPath('data.status', EventStatus::RASCUNHO->value);
     }
 
     public function test_public_event_detail_does_not_expose_author_contact(): void

@@ -60,12 +60,17 @@ class SiteController extends Controller
                 'capacity' => $event->capacity,
                 'remaining_places' => $event->capacity === null ? null : max(0, $event->capacity - (int) $event->getAttribute('active_registrations_count')),
             ]),
-            'open_activities' => Activity::query()->open()->with('category')->orderBy('ends_on')->limit(6)->get()
+            'open_activities' => Activity::query()->open()->with(['category', 'photos'])->orderBy('ends_on')->limit(6)->get()
                 ->map(fn (Activity $activity) => [
                     'slug' => $activity->slug,
                     'title' => $activity->title,
                     'summary' => $activity->summary,
                     'ends_on' => $activity->ends_on?->toDateString(),
+                    'cover_url' => $this->fileUrl($activity->photos->first()?->path),
+                    'photos' => $activity->photos->map(fn ($photo) => [
+                        'id' => $photo->id,
+                        'url' => $this->fileUrl($photo->path),
+                    ])->all(),
                     'category' => $activity->category?->only(['id', 'name', 'slug']),
                 ]),
             'resolved_reports' => ReportPublicResource::collection($reports)->resolve($request),

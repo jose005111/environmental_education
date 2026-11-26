@@ -12,6 +12,11 @@ class QuizAttemptResource extends JsonResource
         return [
             'id' => $this->id,
             'quiz_id' => $this->quiz_id,
+            'user' => $this->whenLoaded('user', fn () => [
+                'id' => $this->user?->id,
+                'name' => $this->user?->name,
+                'email' => $this->user?->email,
+            ]),
             'quiz' => $this->whenLoaded('quiz', fn () => [
                 'id' => $this->quiz?->id,
                 'title' => $this->quiz?->title,

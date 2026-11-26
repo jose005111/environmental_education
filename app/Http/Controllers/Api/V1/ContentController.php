@@ -16,6 +16,7 @@ use App\Models\Content;
 use App\Support\QueryFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Gate;
 
@@ -30,6 +31,7 @@ class ContentController extends Controller
             filters: [
                 'category' => fn (Builder $query, mixed $value) => $query->whereIn('category_id', QueryFilter::parseValues($value)),
                 'type' => fn (Builder $query, mixed $value) => $query->whereIn('type', QueryFilter::parseValues($value)),
+                'status' => fn (Builder $query, mixed $value) => $query->whereIn('status', QueryFilter::parseValues($value)),
             ],
             sorts: [
                 'title' => 'title',
@@ -41,23 +43,34 @@ class ContentController extends Controller
             defaultSort: '-published_at',
         );
 
-        $contents = $filter->apply(Content::query()->published()->with('category'))
+        $query = Content::query()->with('category');
+
+        if (! $request->user()?->isModerator() && ! $request->user()?->isAdmin()) {
+            $query->published();
+        }
+
+        $contents = $filter->apply($query)
             ->paginate($filter->perPage());
 
         return $this->paginated($contents, ContentSummaryResource::class, $request);
     }
 
-    public function show(string $slug): ContentResource
+    public function show(Request $request, string $slug): ContentResource
     {
-        $content = Content::query()
-            ->published()
-            ->where('slug', $slug)
-            ->with(['category', 'author'])
-            ->firstOrFail();
+        $query = Content::query()->where('slug', $slug)->with(['category', 'author']);
+
+        $canManage = $request->user()?->isModerator() || $request->user()?->isAdmin();
+        if (! $canManage) {
+            $query->published();
+        }
+
+        $content = $query->firstOrFail();
 
         Gate::authorize('view', $content);
 
-        $content->increment('views_count');
+        if (! $canManage) {
+            $content->increment('views_count');
+        }
 
         return new ContentResource($content->refresh());
     }

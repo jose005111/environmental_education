@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\EventRegistration;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,6 +24,12 @@ class EventResource extends JsonResource
             'vagas_livres' => $this->capacity === null ? null : max(0, $this->capacity - $active),
             'status' => $this->status?->value,
             'status_label' => $this->status?->label(),
+            'my_registration_status' => $request->user()
+                ? EventRegistration::query()
+                    ->where('event_id', $this->id)
+                    ->where('user_id', $request->user()->getKey())
+                    ->first()?->status?->value
+                : null,
             'cover_image' => $this->cover_image,
             'category_id' => $this->category_id,
             'zone_id' => $this->zone_id,

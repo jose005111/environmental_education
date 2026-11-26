@@ -3,11 +3,13 @@
 namespace Tests\Feature;
 
 use App\Enums\RoleName;
+use App\Models\Activity;
 use App\Models\Content;
 use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class SiteHomeTest extends TestCase
@@ -27,6 +29,21 @@ class SiteHomeTest extends TestCase
             ->assertJsonPath('stats.residents', 0)
             ->assertJsonPath('settings.site_name', '')
             ->assertJsonCount(0, 'featured_contents');
+    }
+
+    public function test_home_returns_all_photos_of_open_activities(): void
+    {
+        Storage::fake('public');
+        $activity = Activity::factory()->open()->create();
+        $activity->photos()->create(['path' => 'activities/primeira.jpg']);
+        $activity->photos()->create(['path' => 'activities/segunda.jpg']);
+
+        $this->getJson('/api/v1/public/home')->assertOk()
+            ->assertJsonPath('open_activities.0.slug', $activity->slug)
+            ->assertJsonPath('open_activities.0.cover_url', Storage::disk('public')->url('activities/primeira.jpg'))
+            ->assertJsonCount(2, 'open_activities.0.photos')
+            ->assertJsonPath('open_activities.0.photos.0.url', Storage::disk('public')->url('activities/primeira.jpg'))
+            ->assertJsonPath('open_activities.0.photos.1.url', Storage::disk('public')->url('activities/segunda.jpg'));
     }
 
     public function test_only_admin_can_edit_and_published_content_appears_in_home(): void

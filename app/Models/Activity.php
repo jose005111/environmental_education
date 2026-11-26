@@ -75,6 +75,12 @@ class Activity extends Model
         return $this->hasMany(ActivityParticipation::class);
     }
 
+    /** @return HasMany<ActivityPhoto, $this> */
+    public function photos(): HasMany
+    {
+        return $this->hasMany(ActivityPhoto::class)->orderBy('id');
+    }
+
     public function participants(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'activity_participations')

@@ -18,13 +18,17 @@ use App\Http\Resources\ActivitySummaryResource;
 use App\Http\Resources\ParticipationResource;
 use App\Models\Activity;
 use App\Models\ActivityParticipation;
+use App\Services\StoredFile;
 use App\Support\QueryFilter;
 use DomainException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class ActivityController extends Controller
 {
@@ -53,22 +57,30 @@ class ActivityController extends Controller
             defaultSort: '-created_at',
         );
 
-        $activities = $filter->apply(Activity::query()
-            ->whereIn('status', [ActivityStatus::ABERTA->value, ActivityStatus::ENCERRADA->value])
-            ->with(['category', 'author']))
+        $query = Activity::query()->with(['category', 'author', 'photos']);
+
+        if (! $request->user()?->isModerator() && ! $request->user()?->isAdmin()) {
+            $query->whereIn('status', [ActivityStatus::ABERTA->value, ActivityStatus::ENCERRADA->value]);
+        }
+
+        $activities = $filter->apply($query)
             ->paginate($filter->perPage());
 
         return $this->paginated($activities, ActivitySummaryResource::class, $request);
     }
 
-    public function show(string $slug): JsonResponse
+    public function show(Request $request, string $slug): JsonResponse
     {
-        $activity = Activity::query()
-            ->whereIn('status', [ActivityStatus::ABERTA->value, ActivityStatus::ENCERRADA->value])
+        $query = Activity::query()
             ->where('slug', $slug)
-            ->with(['category', 'author'])
-            ->withCount('participations')
-            ->firstOrFail();
+            ->with(['category', 'author', 'photos'])
+            ->withCount('participations');
+
+        if (! $request->user()?->isModerator() && ! $request->user()?->isAdmin()) {
+            $query->whereIn('status', [ActivityStatus::ABERTA->value, ActivityStatus::ENCERRADA->value]);
+        }
+
+        $activity = $query->firstOrFail();
 
         Gate::authorize('view', $activity);
 
@@ -79,10 +91,25 @@ class ActivityController extends Controller
     {
         Gate::authorize('create', Activity::class);
 
-        $activity = Activity::create([
-            ...$request->validated(),
-            'author_id' => $request->user()->getKey(),
-        ]);
+        $data = $request->safe()->except('photos');
+        $stored = [];
+        try {
+            $activity = DB::transaction(function () use ($request, $data, &$stored): Activity {
+                $activity = Activity::create([...$data, 'author_id' => $request->user()->getKey()]);
+                foreach ($request->file('photos', []) as $photo) {
+                    $path = app(StoredFile::class)->store($photo, 'activities')['path'];
+                    $stored[] = $path;
+                    $activity->photos()->create(['path' => $path]);
+                }
+
+                return $activity;
+            });
+        } catch (Throwable $exception) {
+            foreach ($stored as $path) {
+                app(StoredFile::class)->delete($path);
+            }
+            throw $exception;
+        }
 
         return $this->created(
             new ActivityResource($this->loadActivity($activity)),
@@ -94,7 +121,33 @@ class ActivityController extends Controller
     {
         Gate::authorize('update', $activity);
 
-        $activity->fill($request->validated())->save();
+        $data = $request->safe()->except(['photos', 'removed_photo_ids']);
+        $removed = $activity->photos()->whereIn('id', $request->input('removed_photo_ids', []))->get();
+        if ($activity->photos()->count() - $removed->count() + count($request->file('photos', [])) > 5) {
+            throw ValidationException::withMessages(['photos' => 'A actividade pode ter no máximo 5 fotografias.']);
+        }
+
+        $stored = [];
+        try {
+            DB::transaction(function () use ($activity, $data, $removed, $request, &$stored): void {
+                $activity->fill($data)->save();
+                $activity->photos()->whereIn('id', $removed->modelKeys())->delete();
+                foreach ($request->file('photos', []) as $photo) {
+                    $path = app(StoredFile::class)->store($photo, 'activities')['path'];
+                    $stored[] = $path;
+                    $activity->photos()->create(['path' => $path]);
+                }
+            });
+        } catch (Throwable $exception) {
+            foreach ($stored as $path) {
+                app(StoredFile::class)->delete($path);
+            }
+            throw $exception;
+        }
+
+        foreach ($removed as $photo) {
+            app(StoredFile::class)->delete($photo->path);
+        }
 
         return $this->success(
             'Actividade actualizada com sucesso.',
@@ -239,6 +292,6 @@ class ActivityController extends Controller
 
     private function loadActivity(Activity $activity): Activity
     {
-        return $activity->load(['category', 'author'])->loadCount('participations');
+        return $activity->load(['category', 'author', 'photos'])->loadCount('participations');
     }
 }

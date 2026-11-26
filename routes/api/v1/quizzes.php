@@ -10,6 +10,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/quizzes/{quiz}', [QuizController::class, 'show'])
         ->name('api.v1.quizzes.show');
 
+    Route::get('/quizzes/{quiz}/attempts', [QuizController::class, 'attempts'])
+        ->name('api.v1.quizzes.attempts.moderation');
+
     Route::post('/quizzes', [QuizController::class, 'store'])
         ->name('api.v1.quizzes.store');
 

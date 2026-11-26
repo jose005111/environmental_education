@@ -50,14 +50,14 @@ class EventController extends Controller
             defaultSort: '-starts_at',
         );
 
-        $events = $filter->apply($this->eventQuery())->paginate($filter->perPage());
+        $events = $filter->apply($this->eventQuery($request))->paginate($filter->perPage());
 
         return $this->paginated($events, EventSummaryResource::class, $request);
     }
 
-    public function show(string $slug): EventResource
+    public function show(Request $request, string $slug): EventResource
     {
-        $event = $this->eventQuery()
+        $event = $this->eventQuery($request)
             ->with('author')
             ->where('slug', $slug)
             ->firstOrFail();
@@ -209,12 +209,17 @@ class EventController extends Controller
         return $this->paginated($registrations, EventRegistrationResource::class, $request);
     }
 
-    private function eventQuery(): Builder
+    private function eventQuery(Request $request): Builder
     {
-        return Event::query()
-            ->public()
+        $query = Event::query()
             ->withCount($this->activeRegistrationsCount())
             ->with(['category', 'zone']);
+
+        if (! $request->user()?->isModerator() && ! $request->user()?->isAdmin()) {
+            $query->public();
+        }
+
+        return $query;
     }
 
     private function withRegistrationRelations(Builder $query): Builder
